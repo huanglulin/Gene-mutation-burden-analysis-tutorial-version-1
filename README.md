@@ -291,6 +291,7 @@ The results are like this:
 [lulinhuang@compute-0-54 geneburdentest]$ more missense_out0.01chr22_davies.csv
 ```
 
+```
 "","SetID","P.value","N.Marker.All","N.Marker.Test"
 "1","3-Sep",0.571489184186594,4,2
 "2","5-Sep",1,3,3
@@ -303,7 +304,7 @@ The results are like this:
 
 For running the missense maf 0.001 dataset, using the following R scripts:
 
-```
+
 ```
 library(SKAT)
 setwd("/share/archive/lulinhuang/geneburdentest")
@@ -327,13 +328,13 @@ obj<-SKAT_Null_Model(y ~ 1, out_type="C")
 missense_out0.001chr22=SKAT.SSD.All(SSD.INFO,obj,method="davies",obj.SNPWeight = mw)
 write.csv(as.data.frame(missense_out0.001chr22$results),file=paste("./missense_out0.001chr22_davies",".csv", sep=""))
 ```
-```
+
 
 The results are like this:
 
 ```
 [lulinhuang@compute-0-54 geneburdentest]$ more missense_out0.001chr22_davies.csv
-```
+
 
 "","SetID","P.value","N.Marker.All","N.Marker.Test"
 "1","3-Sep",0.769654727591407,3,1
@@ -359,7 +360,7 @@ The results are like this:
 "21","APOL2",0.781510937878202,5,4
 
 
-
+```
 
 
 
