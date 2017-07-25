@@ -127,11 +127,13 @@ The association analysis command:
 ```
 [lulinhuang@compute-0-54 geneburdentest]$ more chr22_quality100.assoc
 ```
+```
  CHR           SNP         BP   A1      F_A      F_U   A2        CHISQ            P           OR
   22   22:16256352   16256352    C   0.2681   0.2796    T      0.08198       0.7746       0.9439
   22   22:16256430   16256430    G   0.1812   0.1723    A      0.06807       0.7942        1.063
   22   22:16256512   16256512    C   0.2609   0.2463    T       0.1426       0.7057         1.08
   22   22:16269934   16269934    G   0.4203   0.4297    A      0.04559       0.8309       0.9621
+```
 
 Then, you can use qqman package to do QQ plot using the association data.
 
@@ -152,7 +154,7 @@ The gene setID file is like this:
 ```
 [lulinhuang@compute-0-54 geneburdentest]$ more chr22_quality100_0.01_missense.SetID
 ```
-
+```
 POTEH   22:16277873
 POTEH   22:16277880
 POTEH   22:16279292
@@ -167,12 +169,12 @@ CCT8L2  22:17072285
 CCT8L2  22:17072384
 CCT8L2  22:17072486
 CCT8L2  22:17072504
-
+```
 
 ```
 [lulinhuang@compute-0-54 geneburdentest]$ more chr22_quality100_0.001_missense.SetID
 ```
-
+```
 POTEH   22:16279292
 POTEH   22:16287495
 POTEH   22:16287753
@@ -186,6 +188,7 @@ CCT8L2  22:17072806
 CCT8L2  22:17073028
 CCT8L2  22:17073131
 CCT8L2  22:17073133
+```
 
 ### 2.3 Make Weight file using the CADD score of the ANNOVAR annotation file vcf4chr22_quality100_SNPs.hg19_multianno.txt (CADD13_PHRED score, the larger value indicate more functional damage for a variant). For more information about the CADD score, please infer http://cadd.gs.washington.edu/info. 
 
@@ -193,6 +196,7 @@ The Weight file is like this:
 
 ```
 [lulinhuang@compute-0-54 geneburdentest]$ more  missense_0.01_chr22_quality100weights
+```
 ```
 
 22:16277873   |   12.54
@@ -208,11 +212,12 @@ The Weight file is like this:
 22:17072285     |   23.1
 22:17072384     |   0.053
 22:17072486     |   23
+```
 
 ```
 [lulinhuang@compute-0-54 geneburdentest]$ more missense_0.001_chr22_quality100weights
 ```
-
+```
 22:16279292    |    23.4
 22:16287495     |   0.008
 22:16287753    |    0.001
@@ -232,6 +237,7 @@ The Weight file is like this:
 22:17444640    |    15.02
 22:17444685   |   |     23.8
 22:17445711   |     6.354
+```
 
 ## 3. Running SKAT 
 
