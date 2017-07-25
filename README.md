@@ -4,34 +4,34 @@ The rapid development of sequencing technologies has led to the launch of numero
 
 This tutorial is still being developed and we need your help to improve it: if you spot errors, or find places where clarification is needed, please let us know. If you have any suggestions to make this tutorial more useful, please also let us know. We will modify to make it easier for future readers to go through the tutorial.
 
-0. Background
+## 0. Background
 
 This is a background section for helping you to better understand the analysis, but skipping the background will not make the analysis not work. Thus, if you want to conduct the analysis immediately, feel free to go to the first step. Everything will work fine even without reading the background.
 
-A. Basics of gene mutations
+### A. Basics of gene mutations
 
 If you want to know more about gene mutations, please refer to https://ghr.nlm.nih.gov/primer/mutationsanddisorders/genemutation for some basic backgrounds information.
 
-B. Basics of genotype vcf files
+### B. Basics of genotype vcf files
 
 The VCF genotype file is very popular to store genotype data, please refer to http://support.illumina.com/content/dam/illumina-support/help/BaseSpaceHelp_v2/Content/Vault/Informatics/Sequencing_Analysis/BS/swSEQ_mBS_VCF.htm for some basic backgrounds information.
 
-C. Basics of plink files
+### C. Basics of plink files
 
 The Plink files is also very popular to store genotype data, please refer to http://www.cog-genomics.org/plink/1.9/ for more information.
 
-D. Tools to be used.
+### D. Tools to be used.
 
 Tool	version/year	Path/Link	Purpose
 Plink	v.1.9	/home/lulinhuang/bin/plink	Change file format
 SKAT	v 1.3.0	https://cran.r-project.org/web/packages/SKAT/	Burden assay
 ANNOVAR		/home/lulinhuang/bin/  annotation
 
-E. Training files to be used.
+### E. Training files to be used.
 The training file dataset is in the following directory /share/archive/lulinhuang/geneburdentest/.
 
 
-1. Variants annotation
+## 1. Variants annotation
 
 You can make a new directory and copy the chr22_quality100.vcf file to your directory. Other files will produce during the process. 
 
@@ -84,27 +84,32 @@ chr22   16256352        16256352        T       C       999     PASS    DP=71;VD
 
 In this case, you can use the following command to convert the vcf file to vcf4 for ANNOVAR annotation:
 
+```
 [lulinhuang@compute-0-54 geneburdentest]$ convert2annovar.pl -format vcf4 chr22_quality100.vcf -outfile vcf4chr22_quality100
-
+```
 Then, using ANNOVAR annotation to get the gene, variant frequency and mutation CADD score for further analysis.
 
+```
 [lulinhuang@compute-0-54 geneburdentest]$ table_annovar.pl vcf4chr22_quality100 -thread 6 -buildver hg19 /home/lulinhuang/bin/annovar/humandb -out vcf4chr22_quality100 -remove -protocol refGene,cytoBand,1000g2015aug_all,cadd13 -operation g,r,f,f -nastring .
+```
 
 These commands will give the annotation file:
-
+```
 [lulinhuang@compute-0-54 geneburdentest]$ more vcf4chr22_quality100_SNPs.hg19_multianno.txt
-
+```
 Chr     Start   End     Ref     Alt     Func.refGene    Gene.refGene    GeneDetail.refGene      ExonicFunc.refGene      AAChange.refGene        cytoBand  1000g2015aug_all        CADD13_RawScore CADD13_PHRED
 chr22   16269934        16269934        A       G       exonic  POTEH   .       nonsynonymous SNV       POTEH:NM_001136213:exon7:c.T1247C:p.L416S22q11.1  .       2.690721        20.8
 chr22   16287789        16287789        C       G       exonic  POTEH   .       nonsynonymous SNV       POTEH:NM_001136213:exon1:c.G97C:p.A33P  22q11.1   0.0948482       -0.763275       0.052
 
-2. Make the input files
+## 2. Make the input files
 
-2.1 Make binary plink files
+### 2.1 Make binary plink files
 
 Using the following commands to convert the vcf genotype file to get the binary plink data files which will be used as part of the input files for SKAT package.
 
+```
 [lulinhuang@compute-0-54 geneburdentest]$ plink --vcf chr22_quality100.vcf --make-bed --double-id --out chr22_quality100
+```
 
 This command will get these three files:
 
@@ -116,10 +121,12 @@ You can also do association analysis using these files to get the P values to do
 
 The association analysis command:
 
+```
 [lulinhuang@compute-0-54 geneburdentest]$ plink --bfile chr22_quality100 --assoc --out chr22_quality100
-
+```
+```
 [lulinhuang@compute-0-54 geneburdentest]$ more chr22_quality100.assoc
-
+```
  CHR           SNP         BP   A1      F_A      F_U   A2        CHISQ            P           OR
   22   22:16256352   16256352    C   0.2681   0.2796    T      0.08198       0.7746       0.9439
   22   22:16256430   16256430    G   0.1812   0.1723    A      0.06807       0.7942        1.063
@@ -128,21 +135,23 @@ The association analysis command:
 
 Then, you can use qqman package to do QQ plot using the association data.
 
+```
 install.packages("qqman")
-
 >library(qqman)
-
 qq(chr22_quality100.assoc$P, main = "Q-Q plot of GWAS p-values")
+```
 
 Then, you will got the Q-Q plot like this:
 
-2.2 Make File.SetID file
+### 2.2 Make File.SetID file
 
 Extract the variants with the frequency minor allele frequency (MAF) in 1000g2015aug_all database less than 0.01 or MAF less than 0.001 from the annotation file vcf4chr22_quality100_SNPs.hg19_multianno.txt, because we want to analysis rare variants.
 
 The gene setID file is like this:
 
+```
 [lulinhuang@compute-0-54 geneburdentest]$ more chr22_quality100_0.01_missense.SetID
+```
 
 POTEH   22:16277873
 POTEH   22:16277880
@@ -159,7 +168,10 @@ CCT8L2  22:17072384
 CCT8L2  22:17072486
 CCT8L2  22:17072504
 
+
+```
 [lulinhuang@compute-0-54 geneburdentest]$ more chr22_quality100_0.001_missense.SetID
+```
 
 POTEH   22:16279292
 POTEH   22:16287495
@@ -175,11 +187,13 @@ CCT8L2  22:17073028
 CCT8L2  22:17073131
 CCT8L2  22:17073133
 
-2.3 Make Weight file using the CADD score of the ANNOVAR annotation file vcf4chr22_quality100_SNPs.hg19_multianno.txt (CADD13_PHRED score, the larger value indicate more functional damage for a variant). For more information about the CADD score, please infer http://cadd.gs.washington.edu/info. 
+### 2.3 Make Weight file using the CADD score of the ANNOVAR annotation file vcf4chr22_quality100_SNPs.hg19_multianno.txt (CADD13_PHRED score, the larger value indicate more functional damage for a variant). For more information about the CADD score, please infer http://cadd.gs.washington.edu/info. 
 
 The Weight file is like this:
 
+```
 [lulinhuang@compute-0-54 geneburdentest]$ more  missense_0.01_chr22_quality100weights
+```
 
 22:16277873     12.54
 22:16277880     19.3
@@ -195,7 +209,9 @@ The Weight file is like this:
 22:17072384     0.053
 22:17072486     23
 
+```
 [lulinhuang@compute-0-54 geneburdentest]$ more missense_0.001_chr22_quality100weights
+```
 
 22:16279292     23.4
 22:16287495     0.008
@@ -217,14 +233,18 @@ The Weight file is like this:
 22:17444685     23.8
 22:17445711     6.354
 
-3. Running SKAT 
+## 3. Running SKAT 
 
 Install SKAT R package:
+
+```
 [lulinhuang@compute-0-54 geneburdentest]$R
 > install.packages("SKAT_1.3.0.tar.gz", repos = NULL, type="source")
+```
 
 For running the missense maf 0.01 dataset, using the following R scripts:
 
+```
 library(SKAT)
 setwd("/share/archive/lulinhuang/geneburdentest")
 Project.BED="chr22_quality100.bed"
@@ -246,10 +266,13 @@ mw = Read_SNP_WeightFile(weights)
 obj<-SKAT_Null_Model(y ~ 1, out_type="C")
 missense_out0.01chr22=SKAT.SSD.All(SSD.INFO,obj,method="davies",obj.SNPWeight = mw)
 write.csv(as.data.frame(missense_out0.01chr22$results),file=paste("./missense_out0.01chr22_davies",".csv", sep=""))
+```
 
 The results are like this:
 
+```
 [lulinhuang@compute-0-54 geneburdentest]$ more missense_out0.01chr22_davies.csv
+```
 
 "","SetID","P.value","N.Marker.All","N.Marker.Test"
 "1","3-Sep",0.571489184186594,4,2
@@ -262,6 +285,7 @@ The results are like this:
 
 For running the missense maf 0.001 dataset, using the following R scripts:
 
+```
 library(SKAT)
 setwd("/share/archive/lulinhuang/geneburdentest")
 Project.BED="chr22_quality100.bed"
@@ -283,10 +307,13 @@ mw = Read_SNP_WeightFile(weights)
 obj<-SKAT_Null_Model(y ~ 1, out_type="C")
 missense_out0.001chr22=SKAT.SSD.All(SSD.INFO,obj,method="davies",obj.SNPWeight = mw)
 write.csv(as.data.frame(missense_out0.001chr22$results),file=paste("./missense_out0.001chr22_davies",".csv", sep=""))
+```
 
 The results are like this:
 
+```
 [lulinhuang@compute-0-54 geneburdentest]$ more missense_out0.001chr22_davies.csv
+```
 
 "","SetID","P.value","N.Marker.All","N.Marker.Test"
 "1","3-Sep",0.769654727591407,3,1
