@@ -148,6 +148,10 @@ qq(chr22_quality100.assoc$P, main = "Q-Q plot of GWAS p-values")
 
 Then, you will got the Q-Q plot like this:
 
+http://www.gettinggeneticsdone.com/2014/05/qqman-r-package-for-qq-and-manhattan-plots-for-gwas-results.html
+
+
+
 ### 2.2 Make File.SetID file
 
 Extract the variants with the frequency minor allele frequency (MAF) in 1000g2015aug_all database less than 0.01 or MAF less than 0.001 from the annotation file vcf4chr22_quality100_SNPs.hg19_multianno.txt, because we want to analysis rare variants.
@@ -258,7 +262,6 @@ Install SKAT R package:
 For running the missense maf 0.001 dataset, using the following R scripts:
 
 ```
-```
 library(SKAT)
 setwd("/share/archive/lulinhuang/geneburdentest")
 Project.BED="chr22_quality100.bed"
@@ -280,7 +283,6 @@ mw = Read_SNP_WeightFile(weights)
 obj<-SKAT_Null_Model(y ~ 1, out_type="C")
 missense_out0.01chr22=SKAT.SSD.All(SSD.INFO,obj,method="davies",obj.SNPWeight = mw)
 write.csv(as.data.frame(missense_out0.01chr22$results),file=paste("./missense_out0.01chr22_davies",".csv", sep=""))
-```
 ```
 
 The results are like this:
