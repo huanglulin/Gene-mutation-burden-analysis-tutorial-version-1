@@ -1,6 +1,7 @@
 # Gene-mutation-burden-analysis-tutorial-version-1
 
 The rapid development of sequencing technologies has led to the launch of numerous sequencing studies for many complex traits. In addition to discovery of common variants, sequencing allows discovery of low-frequency and rare variants as well. The contribution of rare variants to disease risk is unknown for many traits, but it is reasonable to assume that rare variants influences the risk of many complex diseases. This tutorial aims to help new lab members in the Wang lab to conduct the detection of burden assays of a disease gene by using genotype data. It would tell you how to convert the genotype data and do burden assay. 
+
 This tutorial is still being developed and we need your help to improve it: if you spot errors, or find places where clarification is needed, please let us know. If you have any suggestions to make this tutorial more useful, please also let us know. We will modify to make it easier for future readers to go through the tutorial.
 
 0. Background
@@ -12,12 +13,15 @@ A. Basics of gene mutations
 If you want to know more about gene mutations, please refer to https://ghr.nlm.nih.gov/primer/mutationsanddisorders/genemutation for some basic backgrounds information.
 
 B. Basics of genotype vcf files
+
 The VCF genotype file is very popular to store genotype data, please refer to http://support.illumina.com/content/dam/illumina-support/help/BaseSpaceHelp_v2/Content/Vault/Informatics/Sequencing_Analysis/BS/swSEQ_mBS_VCF.htm for some basic backgrounds information.
 
 C. Basics of plink files
+
 The Plink files is also very popular to store genotype data, please refer to http://www.cog-genomics.org/plink/1.9/ for more information.
 
 D. Tools to be used.
+
 Tool	version/year	Path/Link	Purpose
 Plink	v.1.9	/home/lulinhuang/bin/plink	Change file format
 SKAT	v 1.3.0	https://cran.r-project.org/web/packages/SKAT/	Burden assay
@@ -30,8 +34,11 @@ The training file dataset is in the following directory /share/archive/lulinhuan
 1. Variants annotation
 
 You can make a new directory and copy the chr22_quality100.vcf file to your directory. Other files will produce during the process. 
+
 To get the variant frequency and gene coding information for a non-annoted file, you should do annotation using ANNOVAR. For the information of ANNOVAR, please refer: http://annovar.openbioinformatics.org/en/latest/user-guide/startup/
+
 Take a look at our chr22_quality100.vcf data:
+
 ##fileformat=VCFv4.1
 ##FILTER=<ID=PASS,Description="All filters passed">
 ##samtoolsVersion=0.1.18 (r982:295)
@@ -48,10 +55,7 @@ Take a look at our chr22_quality100.vcf data:
 ##INFO=<ID=CGT,Number=1,Type=String,Description="The most probable constrained genotype configuration in the trio">
 ##INFO=<ID=PV4,Number=4,Type=Float,Description="P-values for strand bias, baseQ bias, mapQ bias and tail distance bias">
 ##INFO=<ID=INDEL,Number=0,Type=Flag,Description="Indicates that the variant is an INDEL.">
-##INFO=<ID=PC2,Number=2,Type=Integer,Description="Phred probability of the nonRef allele frequency in group1 samples being larger (,smaller) than
-in group2.">
-##INFO=<ID=PCHI2,Number=1,Type=Float,Description="Posterior weighted chi^2 P-value for testing the association between group1 and group2 samples."
->
+##INFO=<ID=PC2,Number=2,Type=Integer,Description="Phred probability of the nonRef allele frequency in group1 samples being 
 ##INFO=<ID=QCHI2,Number=1,Type=Integer,Description="Phred scaled PCHI2.">
 ##INFO=<ID=PR,Number=1,Type=Integer,Description="# permutations yielding a smaller PCHI2.">
 ##INFO=<ID=VDB,Number=1,Type=Float,Description="Variant Distance Bias">
@@ -79,11 +83,17 @@ chr22   16256352        16256352        T       C       999     PASS    DP=71;VD
 
 
 In this case, you can use the following command to convert the vcf file to vcf4 for ANNOVAR annotation:
+
 [lulinhuang@compute-0-54 geneburdentest]$ convert2annovar.pl -format vcf4 chr22_quality100.vcf -outfile vcf4chr22_quality100
+
 Then, using ANNOVAR annotation to get the gene, variant frequency and mutation CADD score for further analysis.
+
 [lulinhuang@compute-0-54 geneburdentest]$ table_annovar.pl vcf4chr22_quality100 -thread 6 -buildver hg19 /home/lulinhuang/bin/annovar/humandb -out vcf4chr22_quality100 -remove -protocol refGene,cytoBand,1000g2015aug_all,cadd13 -operation g,r,f,f -nastring .
+
 These commands will give the annotation file:
+
 [lulinhuang@compute-0-54 geneburdentest]$ more vcf4chr22_quality100_SNPs.hg19_multianno.txt
+
 Chr     Start   End     Ref     Alt     Func.refGene    Gene.refGene    GeneDetail.refGene      ExonicFunc.refGene      AAChange.refGene        cytoBand  1000g2015aug_all        CADD13_RawScore CADD13_PHRED
 chr22   16269934        16269934        A       G       exonic  POTEH   .       nonsynonymous SNV       POTEH:NM_001136213:exon7:c.T1247C:p.L416S22q11.1  .       2.690721        20.8
 chr22   16287789        16287789        C       G       exonic  POTEH   .       nonsynonymous SNV       POTEH:NM_001136213:exon1:c.G97C:p.A33P  22q11.1   0.0948482       -0.763275       0.052
@@ -109,6 +119,7 @@ The association analysis command:
 [lulinhuang@compute-0-54 geneburdentest]$ plink --bfile chr22_quality100 --assoc --out chr22_quality100
 
 [lulinhuang@compute-0-54 geneburdentest]$ more chr22_quality100.assoc
+
  CHR           SNP         BP   A1      F_A      F_U   A2        CHISQ            P           OR
   22   22:16256352   16256352    C   0.2681   0.2796    T      0.08198       0.7746       0.9439
   22   22:16256430   16256430    G   0.1812   0.1723    A      0.06807       0.7942        1.063
@@ -120,12 +131,10 @@ Then, you can use qqman package to do QQ plot using the association data.
 install.packages("qqman")
 
 >library(qqman)
+
 qq(chr22_quality100.assoc$P, main = "Q-Q plot of GWAS p-values")
 
 Then, you will got the Q-Q plot like this:
-
-
-
 
 2.2 Make File.SetID file
 
@@ -134,6 +143,7 @@ Extract the variants with the frequency minor allele frequency (MAF) in 1000g201
 The gene setID file is like this:
 
 [lulinhuang@compute-0-54 geneburdentest]$ more chr22_quality100_0.01_missense.SetID
+
 POTEH   22:16277873
 POTEH   22:16277880
 POTEH   22:16279292
@@ -150,6 +160,7 @@ CCT8L2  22:17072486
 CCT8L2  22:17072504
 
 [lulinhuang@compute-0-54 geneburdentest]$ more chr22_quality100_0.001_missense.SetID
+
 POTEH   22:16279292
 POTEH   22:16287495
 POTEH   22:16287753
@@ -169,6 +180,7 @@ CCT8L2  22:17073133
 The Weight file is like this:
 
 [lulinhuang@compute-0-54 geneburdentest]$ more  missense_0.01_chr22_quality100weights
+
 22:16277873     12.54
 22:16277880     19.3
 22:16279292     23.4
@@ -184,6 +196,7 @@ The Weight file is like this:
 22:17072486     23
 
 [lulinhuang@compute-0-54 geneburdentest]$ more missense_0.001_chr22_quality100weights
+
 22:16279292     23.4
 22:16287495     0.008
 22:16287753     0.001
@@ -237,6 +250,7 @@ write.csv(as.data.frame(missense_out0.01chr22$results),file=paste("./missense_ou
 The results are like this:
 
 [lulinhuang@compute-0-54 geneburdentest]$ more missense_out0.01chr22_davies.csv
+
 "","SetID","P.value","N.Marker.All","N.Marker.Test"
 "1","3-Sep",0.571489184186594,4,2
 "2","5-Sep",1,3,3
@@ -273,6 +287,7 @@ write.csv(as.data.frame(missense_out0.001chr22$results),file=paste("./missense_o
 The results are like this:
 
 [lulinhuang@compute-0-54 geneburdentest]$ more missense_out0.001chr22_davies.csv
+
 "","SetID","P.value","N.Marker.All","N.Marker.Test"
 "1","3-Sep",0.769654727591407,3,1
 "2","5-Sep",1,3,3
