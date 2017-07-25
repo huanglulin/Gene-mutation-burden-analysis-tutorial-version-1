@@ -116,9 +116,11 @@ Using the following commands to convert the vcf genotype file to get the binary 
 
 This command will get these three files:
 
+```
 -rw-r--r--  1 lulinhuang wanglab   5712248 Jul 24 19:52 chr22_quality100.bed
 -rw-r--r--  1 lulinhuang wanglab    431279 Jul 24 19:52 chr22_quality100.bim
 -rw-r--r--  1 lulinhuang wanglab     33977 Jul 24 19:52 chr22_quality100.fam
+```
 
 You can also do association analysis using these files to get the P values to do QQ plot to see the data quality.
 
