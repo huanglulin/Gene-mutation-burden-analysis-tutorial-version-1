@@ -117,15 +117,15 @@ The association analysis command:
 
 Then, you can use qqman package to do QQ plot using the association data.
 
-# only once:
 install.packages("qqman")
 
-# each time:
 >library(qqman)
 qq(chr22_quality100.assoc$P, main = "Q-Q plot of GWAS p-values")
 
 Then, you will got the Q-Q plot like this:
- 
+
+
+
 
 2.2 Make File.SetID file
 
