@@ -193,7 +193,9 @@ CCT8L2  22:17073131
 CCT8L2  22:17073133
 ```
 
-### 2.3 Make Weight file using the CADD score of the ANNOVAR annotation file vcf4chr22_quality100_SNPs.hg19_multianno.txt (CADD13_PHRED score, the larger value indicate more functional damage for a variant). For more information about the CADD score, please infer http://cadd.gs.washington.edu/info. 
+### 2.3 Make Weight file using the CADD score of the ANNOVAR annotation file 
+
+Make Weight file using the CADD score of the ANNOVAR annotation file vcf4chr22_quality100_SNPs.hg19_multianno.txt (CADD13_PHRED score, the larger value indicate more functional damage for a variant). For more information about the CADD score, please infer http://cadd.gs.washington.edu/info. 
 
 The Weight file is like this:
 
@@ -256,6 +258,7 @@ Install SKAT R package:
 For running the missense maf 0.01 dataset, using the following R scripts:
 
 ```
+```
 library(SKAT)
 setwd("/share/archive/lulinhuang/geneburdentest")
 Project.BED="chr22_quality100.bed"
@@ -278,6 +281,7 @@ obj<-SKAT_Null_Model(y ~ 1, out_type="C")
 missense_out0.01chr22=SKAT.SSD.All(SSD.INFO,obj,method="davies",obj.SNPWeight = mw)
 write.csv(as.data.frame(missense_out0.01chr22$results),file=paste("./missense_out0.01chr22_davies",".csv", sep=""))
 ```
+```
 
 The results are like this:
 
@@ -297,6 +301,7 @@ The results are like this:
 
 For running the missense maf 0.001 dataset, using the following R scripts:
 
+```
 ```
 library(SKAT)
 setwd("/share/archive/lulinhuang/geneburdentest")
@@ -319,6 +324,7 @@ mw = Read_SNP_WeightFile(weights)
 obj<-SKAT_Null_Model(y ~ 1, out_type="C")
 missense_out0.001chr22=SKAT.SSD.All(SSD.INFO,obj,method="davies",obj.SNPWeight = mw)
 write.csv(as.data.frame(missense_out0.001chr22$results),file=paste("./missense_out0.001chr22_davies",".csv", sep=""))
+```
 ```
 
 The results are like this:
