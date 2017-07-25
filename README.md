@@ -39,6 +39,7 @@ To get the variant frequency and gene coding information for a non-annoted file,
 
 Take a look at our chr22_quality100.vcf data:
 
+```
 ##fileformat=VCFv4.1
 ##FILTER=<ID=PASS,Description="All filters passed">
 ##samtoolsVersion=0.1.18 (r982:295)
@@ -80,7 +81,7 @@ chr22   16256352        16256352        T       C       999     PASS    DP=71;VD
 .
 .
 .
-
+```
 
 In this case, you can use the following command to convert the vcf file to vcf4 for ANNOVAR annotation:
 
@@ -97,9 +98,11 @@ These commands will give the annotation file:
 ```
 [lulinhuang@compute-0-54 geneburdentest]$ more vcf4chr22_quality100_SNPs.hg19_multianno.txt
 ```
+```
 Chr     Start   End     Ref     Alt     Func.refGene    Gene.refGene    GeneDetail.refGene      ExonicFunc.refGene      AAChange.refGene        cytoBand  1000g2015aug_all        CADD13_RawScore CADD13_PHRED
 chr22   16269934        16269934        A       G       exonic  POTEH   .       nonsynonymous SNV       POTEH:NM_001136213:exon7:c.T1247C:p.L416S22q11.1  .       2.690721        20.8
 chr22   16287789        16287789        C       G       exonic  POTEH   .       nonsynonymous SNV       POTEH:NM_001136213:exon1:c.G97C:p.A33P  22q11.1   0.0948482       -0.763275       0.052
+```
 
 ## 2. Make the input files
 
@@ -199,44 +202,46 @@ The Weight file is like this:
 ```
 ```
 
-22:16277873   |   12.54
-22:16277880    |   19.3
-22:16279292     |   23.4
-22:16287354     |   17.25
-22:16287495     |   0.008
-22:16287753    |    0.001
-22:16287794     |   18.9
-22:16449210    |    35
-22:16449320    |    0.192
-22:17071802     |   0.001
-22:17072285     |   23.1
-22:17072384     |   0.053
-22:17072486     |   23
+22:16277873     12.54
+22:16277880     19.3
+22:16279292     23.4
+22:16287354     17.25
+22:16287495     0.008
+22:16287753     0.001
+22:16287794     18.9
+22:16449210     35
+22:16449320     0.192
+22:17071802     0.001
+22:17072285     23.1
+22:17072384     0.053
+22:17072486     23
+
 ```
 
 ```
 [lulinhuang@compute-0-54 geneburdentest]$ more missense_0.001_chr22_quality100weights
 ```
 ```
-22:16279292    |    23.4
-22:16287495     |   0.008
-22:16287753    |    0.001
-22:16287794     |   18.9
-22:17071802     |   0.001
-22:17072285     |   23.1
-22:17072486     |   23
-22:17072504   |     0.68
-22:17072743    |    13.38
-22:17072806    |    1.615
-22:17073028   |     5.251
-22:17073131    |    25.9
-22:17073133    |    24
-22:17073145    |    18.72
-22:17073406    |    22.4
-22:17288788    |    19.19
-22:17444640    |    15.02
-22:17444685   |   |     23.8
-22:17445711   |     6.354
+22:16279292     23.4
+22:16287495     0.008
+22:16287753     0.001
+22:16287794     18.9
+22:17071802     0.001
+22:17072285     23.1
+22:17072486     23
+22:17072504     0.68
+22:17072743     13.38
+22:17072806     1.615
+22:17073028     5.251
+22:17073131     25.9
+22:17073133     24
+22:17073145     18.72
+22:17073406     22.4
+22:17288788     19.19
+22:17444640     15.02
+22:17444685     23.8
+22:17445711     6.354
+
 ```
 
 ## 3. Running SKAT 
@@ -288,6 +293,7 @@ The results are like this:
 "5","ACR",0.68719124428967,3,3
 "6","ADM2",0.611640451068496,1,1
 "7","ADORA2A",0.849058913694201,5,4
+```
 
 For running the missense maf 0.001 dataset, using the following R scripts:
 
