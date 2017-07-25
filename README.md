@@ -255,7 +255,7 @@ Install SKAT R package:
 > install.packages("SKAT_1.3.0.tar.gz", repos = NULL, type="source")
 ```
 
-For running the missense maf 0.01 dataset, using the following R scripts:
+For running the missense maf 0.001 dataset, using the following R scripts:
 
 ```
 ```
